@@ -17,7 +17,6 @@
         android:id="@+id/tv_bell"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#fff"
         android:textSize="18sp"
         android:layout_centerInParent="true"/>
 </RelativeLayout>
