@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,14 +30,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     ObtainTime obtainTime;
     ArrayList<GridViewItem> datas = new ArrayList<>();
     ArrayList<ImageView> imageViews = new ArrayList();
-    int[] images;
-    String pwd = "";
+    int[] images;String pwd = "";
 
+    GridView gridView;LinearLayout linlayout_circle;
     ImageView circle_1,circle_2,circle_3,circle_4,circle_5,circle_6;
-    TextView time;
-    TextView date;
-    TextView week;
-    TextView lunar_date;
+    TextView time;TextView date;TextView week;TextView lunar_date;
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -45,11 +43,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        GridView gridView = findViewById(R.id.gridview_numbers);
+        gridView = findViewById(R.id.gridview_numbers);
         time = findViewById(R.id.time);
         date = findViewById(R.id.date);
         week = findViewById(R.id.week);
         lunar_date = findViewById(R.id.lunar_date);
+        linlayout_circle = findViewById(R.id.linlayout_circle);
         circle_1 = findViewById(R.id.circle_1);
         circle_2 = findViewById(R.id.circle_2);
         circle_3 = findViewById(R.id.circle_3);
@@ -57,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         circle_5 = findViewById(R.id.circle_5);
         circle_6 = findViewById(R.id.circle_6);
 
+        linlayout_circle.setVisibility(View.INVISIBLE);
         imageViews.add(circle_1);imageViews.add(circle_2);imageViews.add(circle_3);
         imageViews.add(circle_4);imageViews.add(circle_5);imageViews.add(circle_6);
 
@@ -98,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        linlayout_circle.setVisibility(View.VISIBLE);
         if (pwd.length() < 6){
             inputPwd(i);
             if (i != 11)
@@ -134,5 +135,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if (requestCode == 1)
             for (int i = 0; i < 6; i++)
                 imageViews.get(i).setImageResource(R.drawable.circle_0);
+            linlayout_circle.setVisibility(View.INVISIBLE);
     }
 }
