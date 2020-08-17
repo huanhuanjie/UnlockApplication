@@ -1,24 +1,25 @@
 package com.example.unlockapplication.Util;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class ObtainTime {
 
-    long currentDate;
     SimpleDateFormat simpleDateFormat;
 
-    public ObtainTime() {
-        this.currentDate = System.currentTimeMillis();
-    }
-
     public String getTime(){
+        long currentDate = System.currentTimeMillis();
         simpleDateFormat = new SimpleDateFormat("HH:mm");
         String time = simpleDateFormat.format(currentDate);
         return time;
     }
 
     public String getDate(){
+        long currentDate = System.currentTimeMillis();
         simpleDateFormat = new SimpleDateFormat("MM月dd日");
         String date = simpleDateFormat.format(currentDate);
         return date;
@@ -47,10 +48,16 @@ public class ObtainTime {
         }
     }
 
-    /*public String getLunarDate(){
-        simpleDateFormat = new SimpleDateFormat("MM月dd日");
-        String date = simpleDateFormat.format(currentDate);
-        return date;
-    }*/
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public String getLunarDate(){
+        Calendar calendar = Calendar.getInstance();
+        LunarUtil lunarUtil = new LunarUtil(calendar);
+        String lunarDate = lunarUtil.toString();
+        return lunarDate;
+    }
+
+
+
+
 
 }
