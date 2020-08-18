@@ -23,12 +23,15 @@
         <TextView
             android:id="@+id/itemName"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="35dp"
             android:text="設置"
             android:textSize="35sp"/>
         <ListView
             android:id="@+id/listview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:divider="#00000000"
+            android:dividerHeight="35dp"/>
     </LinearLayout>
 </LinearLayout>

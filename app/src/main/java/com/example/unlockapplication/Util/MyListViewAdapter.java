@@ -77,7 +77,20 @@ public class MyListViewAdapter extends BaseAdapter {
                     viewHolder = (ViewHolder) view.getTag();
                 }
                 viewHolder.itemName.setText(listViewItem.getItemName());
+                break;
             case 3:
+                if (convertView == null){
+                    view = LayoutInflater.from(context).inflate(R.layout.list_item_volume,null);
+                    viewHolder = new ViewHolder();
+                    viewHolder.itemName = view.findViewById(R.id.itemName);
+                    /*viewHolder.progressBar = view.findViewById(R.id.progressBar);
+                    viewHolder.ToggleButton = view.findViewById(R.id.ToggleButton);*/
+                    view.setTag(viewHolder);
+                }else {
+                    view = convertView;
+                    viewHolder = (ViewHolder) view.getTag();
+                }
+                viewHolder.itemName.setText(listViewItem.getItemName());
                 break;
             case 4:
             case 5:

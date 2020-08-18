@@ -40,7 +40,10 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 null,null);
         ListViewItem lum_item = new ListViewItem("亮度","",
                 null,null);
+        ListViewItem volume_item = new ListViewItem("音量","",
+                null,null);
         datas.add(device_item);datas.add(wifi_item);datas.add(lum_item);
+        datas.add(volume_item);
 
         listView.setAdapter(new MyListViewAdapter(this,datas));
     }

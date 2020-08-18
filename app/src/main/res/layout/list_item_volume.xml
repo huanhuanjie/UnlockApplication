@@ -21,7 +21,7 @@
             android:id="@+id/small_luminance"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:background="@drawable/luminance"
+            android:background="@drawable/volume_0"
             android:layout_gravity="center_vertical"/>
         <SeekBar
             android:id="@+id/progressBar"
@@ -36,7 +36,7 @@
             android:id="@+id/large_luminance"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:background="@drawable/luminance"
+            android:background="@drawable/volume_100"
             android:layout_gravity="center_vertical"/>
     </LinearLayout>
 </RelativeLayout>
