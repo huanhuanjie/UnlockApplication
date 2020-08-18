@@ -42,8 +42,15 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 null,null);
         ListViewItem volume_item = new ListViewItem("音量","",
                 null,null);
+        ListViewItem sound_effect_item = new ListViewItem("音效","",
+                null,null);
+        ListViewItem open_pwd_item = new ListViewItem("更改開門密碼","",
+                null,null);
+        ListViewItem set_pwd_item = new ListViewItem("更改設定密碼","",
+                null,null);
         datas.add(device_item);datas.add(wifi_item);datas.add(lum_item);
-        datas.add(volume_item);
+        datas.add(volume_item);datas.add(sound_effect_item);datas.add(open_pwd_item);
+        datas.add(set_pwd_item);
 
         listView.setAdapter(new MyListViewAdapter(this,datas));
     }

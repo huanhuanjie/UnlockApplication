@@ -35,7 +35,7 @@ public class MyListViewAdapter extends BaseAdapter {
         switch (i){
             case 0:
                 if (convertView == null){
-                    view = LayoutInflater.from(context).inflate(R.layout.list_item_device,null);
+                    view = LayoutInflater.from(context).inflate(R.layout.listitem_device,null);
                     viewHolder = new ViewHolder();
                     viewHolder.itemName = view.findViewById(R.id.itemName);
                     viewHolder.deviceName = view.findViewById(R.id.deviceName);
@@ -52,7 +52,7 @@ public class MyListViewAdapter extends BaseAdapter {
                 break;
             case 1:
                 if (convertView == null){
-                    view = LayoutInflater.from(context).inflate(R.layout.list_item_wifi,null);
+                    view = LayoutInflater.from(context).inflate(R.layout.listitem_wifi,null);
                     viewHolder = new ViewHolder();
                     viewHolder.itemName = view.findViewById(R.id.itemName);
                     /*viewHolder.progressBar = view.findViewById(R.id.progressBar);
@@ -66,7 +66,7 @@ public class MyListViewAdapter extends BaseAdapter {
                 break;
             case 2:
                 if (convertView == null){
-                    view = LayoutInflater.from(context).inflate(R.layout.list_item_luminance,null);
+                    view = LayoutInflater.from(context).inflate(R.layout.listitem_luminance,null);
                     viewHolder = new ViewHolder();
                     viewHolder.itemName = view.findViewById(R.id.itemName);
                     /*viewHolder.progressBar = view.findViewById(R.id.progressBar);
@@ -80,7 +80,7 @@ public class MyListViewAdapter extends BaseAdapter {
                 break;
             case 3:
                 if (convertView == null){
-                    view = LayoutInflater.from(context).inflate(R.layout.list_item_volume,null);
+                    view = LayoutInflater.from(context).inflate(R.layout.listitem_volume,null);
                     viewHolder = new ViewHolder();
                     viewHolder.itemName = view.findViewById(R.id.itemName);
                     /*viewHolder.progressBar = view.findViewById(R.id.progressBar);
@@ -93,13 +93,37 @@ public class MyListViewAdapter extends BaseAdapter {
                 viewHolder.itemName.setText(listViewItem.getItemName());
                 break;
             case 4:
+                if (convertView == null){
+                    view = LayoutInflater.from(context).inflate(R.layout.listitem_sound_effect,null);
+                    viewHolder = new ViewHolder();
+                    viewHolder.itemName = view.findViewById(R.id.itemName);
+                    /*viewHolder.progressBar = view.findViewById(R.id.progressBar);
+                    viewHolder.ToggleButton = view.findViewById(R.id.ToggleButton);*/
+                    view.setTag(viewHolder);
+                }else {
+                    view = convertView;
+                    viewHolder = (ViewHolder) view.getTag();
+                }
+                viewHolder.itemName.setText(listViewItem.getItemName());
             case 5:
             case 6:
+                if (convertView == null){
+                    view = LayoutInflater.from(context).inflate(R.layout.listitem_pwd,null);
+                    viewHolder = new ViewHolder();
+                    viewHolder.itemName = view.findViewById(R.id.itemName);
+                    /*viewHolder.progressBar = view.findViewById(R.id.progressBar);
+                    viewHolder.ToggleButton = view.findViewById(R.id.ToggleButton);*/
+                    view.setTag(viewHolder);
+                }else {
+                    view = convertView;
+                    viewHolder = (ViewHolder) view.getTag();
+                }
+                viewHolder.itemName.setText(listViewItem.getItemName());
                 break;
         }
 
         /*if (convertView == null){
-            view = LayoutInflater.from(context).inflate(R.layout.list_item_wifi,null);
+            view = LayoutInflater.from(context).inflate(R.layout.listitem_wifi,null);
             viewHolder = new ViewHolder();
             viewHolder.itemName = view.findViewById(R.id.itemName);
             viewHolder.deviceName = view.findViewById(R.id.deviceName);
