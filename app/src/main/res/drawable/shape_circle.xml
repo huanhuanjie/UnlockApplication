@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--seekbar的滑动块样式-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <!--solid表示远的填充色-->
+    <solid android:color="#fff"></solid>
+    <!--stroke代表远的边框线-->
+    <stroke android:color="#fff"
+        android:width="1dp"></stroke>
+    <!--size控制高宽-->
+    <size
+        android:width="10dp"
+        android:height="10dp"></size>
+</shape>

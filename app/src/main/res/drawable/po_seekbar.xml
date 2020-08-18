@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- 进度条在0%的时候展示的图片 -->
+    <item android:id="@android:id/background"
+        android:height="3dp">
+        <shape>
+            <corners android:radius="10dip"/>
+            <solid android:color="#3F3F3F" />
+        </shape>
+    </item>
+    <!-- 进度条在0%~100%之间的时候展示的图片 -->
+    <item android:id="@android:id/secondaryProgress"
+        android:height="3dp"
+        android:drawable="@drawable/line"/>
+
+    <!-- 进度条在100%的时候展示的图片 -->
+    <item android:id="@android:id/progress"
+        android:height="3dp"
+        android:drawable="@drawable/line">
+    </item>
+
+</layer-list>

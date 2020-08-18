@@ -22,6 +22,7 @@ import com.example.unlockapplication.R;
 import com.example.unlockapplication.Util.MyGridViewAdapter;
 import com.example.unlockapplication.Util.ObtainTime;
 import com.example.unlockapplication.entity.GridViewItem;
+import com.jaeger.library.StatusBarUtil;
 
 import java.util.ArrayList;
 
@@ -42,6 +43,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //设置状态栏为全透明
+        StatusBarUtil.setTransparent(this);
 
         gridView = findViewById(R.id.gridview_numbers);
         time = findViewById(R.id.time);
@@ -107,7 +111,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (pwd.equals("111111")){
                     Intent settingIntent = new Intent(MainActivity.this,SettingActivity.class);
                     startActivityForResult(settingIntent,1);
-                    pwd = ""; //跳转后，pwd置空
                 }else {
                     pwd = "";
                     for (int k = 0; k < 6; k++)
@@ -132,9 +135,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1)
+        if (requestCode == 1){
+            pwd = "";
+            linlayout_circle.setVisibility(View.INVISIBLE);
             for (int i = 0; i < 6; i++)
                 imageViews.get(i).setImageResource(R.drawable.circle_0);
-            linlayout_circle.setVisibility(View.INVISIBLE);
+        }
+
     }
 }
