@@ -3,7 +3,10 @@ package com.example.unlockapplication.Activity;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -50,6 +53,8 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     List<ScanResult> list;
     View wifiView;
     AudioManager mAudioManager;
+    SeekBar volume_seekbar;
+    BroadcastReceiver receiver;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -67,6 +72,11 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
+        receiver = new VolumeReceiver();
+        IntentFilter filter = new IntentFilter() ;
+        filter.addAction("android.media.VOLUME_CHANGED_ACTION") ;
+        this.registerReceiver(receiver, filter) ;
+
         RelativeLayout layout_device = findViewById(R.id.layout_device);
         RelativeLayout layout_volume = findViewById(R.id.layout_volume);
         //Switch switch_wifi = findViewById(R.id.switch_wifi);
@@ -76,7 +86,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         layout_device.setOnClickListener(this);
         //switch_wifi.setOnCheckedChangeListener(this);
 
-        SeekBar volume_seekbar = findViewById(R.id.volume_seekbar);
+        volume_seekbar = findViewById(R.id.volume_seekbar);
         mAudioManager = (AudioManager)getSystemService(AUDIO_SERVICE);
         int maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);//获取媒体声音最大值
         volume_seekbar.setMax(maxVolume);
@@ -159,6 +169,16 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 break;
         }
 
+    }
+
+    private class VolumeReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getAction().equals("android.media.VOLUME_CHANGED_ACTION")){
+                int currentVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+                volume_seekbar.setProgress(currentVolume);
+            }
+        }
     }
 
     /*private void init() {
