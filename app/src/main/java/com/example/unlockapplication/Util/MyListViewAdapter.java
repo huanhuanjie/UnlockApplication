@@ -108,7 +108,7 @@ public class MyListViewAdapter extends BaseAdapter {
             case 5:
             case 6:
                 if (convertView == null){
-                    view = LayoutInflater.from(context).inflate(R.layout.listitem_pwd,null);
+                    view = LayoutInflater.from(context).inflate(R.layout.listitem_openpwd,null);
                     viewHolder = new ViewHolder();
                     viewHolder.itemName = view.findViewById(R.id.itemName);
                     /*viewHolder.progressBar = view.findViewById(R.id.progressBar);

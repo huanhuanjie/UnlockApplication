@@ -23,15 +23,24 @@
         <TextView
             android:id="@+id/itemName"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="35dp"
+            android:layout_height="70dp"
+            android:gravity="center_vertical"
             android:text="設置"
-            android:textSize="35sp"/>
-        <ListView
+            android:textSize="35sp" />
+
+        <!--<ListView
             android:id="@+id/listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="#00000000"
-            android:dividerHeight="35dp"/>
+            android:dividerHeight="35dp"/>-->
+
+        <include layout="@layout/listitem_device"/>
+        <include layout="@layout/listitem_wifi"/>
+        <include layout="@layout/listitem_luminance"/>
+        <include layout="@layout/listitem_volume"/>
+        <include layout="@layout/listitem_sound_effect"/>
+        <include layout="@layout/listitem_openpwd"/>
+        <include layout="@layout/listitem_setpwd"/>
     </LinearLayout>
 </LinearLayout>

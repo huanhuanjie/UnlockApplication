@@ -10,5 +10,6 @@
 
     <style name="MyTextViewStyle" parent="android:Widget.TextView">
         <item name="android:textColor">#fff</item>
+        <item name="android:includeFontPadding">false</item>
     </style>
 </resources>

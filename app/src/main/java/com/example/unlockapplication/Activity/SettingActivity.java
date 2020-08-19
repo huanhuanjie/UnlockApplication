@@ -30,11 +30,11 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
         //设置状态栏为全透明
         StatusBarUtil.setTransparent(this);
-        ListView listView = findViewById(R.id.listview);
+        //ListView listView = findViewById(R.id.listview);
         toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationOnClickListener(this);
 
-        ListViewItem device_item = new ListViewItem("設備名稱","001" ,
+        /*ListViewItem device_item = new ListViewItem("設備名稱","001" ,
                 null,null);
         ListViewItem wifi_item = new ListViewItem("WIFI","",
                 null,null);
@@ -52,7 +52,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         datas.add(volume_item);datas.add(sound_effect_item);datas.add(open_pwd_item);
         datas.add(set_pwd_item);
 
-        listView.setAdapter(new MyListViewAdapter(this,datas));
+        listView.setAdapter(new MyListViewAdapter(this,datas));*/
     }
 
     @Override

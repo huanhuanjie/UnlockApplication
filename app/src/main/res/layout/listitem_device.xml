@@ -2,28 +2,31 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="70dp">
 
     <TextView
         android:id="@+id/itemName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true"
+        android:text="設備名稱"
+        android:textSize="20sp"/>
 
     <TextView
         android:id="@+id/deviceName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:text="001"
         android:textSize="20sp"
         android:layout_toLeftOf="@id/backImg"
-        android:layout_marginRight="5dp"/>
+        android:layout_marginRight="10dp"/>
 
     <ImageView
         android:id="@+id/backImg"
         android:layout_width="10dp"
         android:layout_height="10dp"
+        android:layout_centerVertical="true"
         android:background="@mipmap/jump"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"/>
+        android:layout_alignParentRight="true"/>
 </RelativeLayout>

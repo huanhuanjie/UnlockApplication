@@ -2,22 +2,21 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
-    android:orientation="horizontal">
+    android:layout_height="70dp">
 
     <TextView
         android:id="@+id/itemName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:text="WIFI"
+        android:text="更改設定密碼"
         android:textSize="20sp"/>
 
-    <Switch
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageView
+        android:id="@+id/backImg"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:background="@mipmap/jump"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:thumb="@drawable/switch_thumb"
-        android:track="@drawable/switch_track_selector"/>
+        android:layout_centerVertical="true"/>
 </RelativeLayout>
