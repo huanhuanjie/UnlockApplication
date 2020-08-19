@@ -20,6 +20,7 @@
         android:layout_marginLeft="22dp"
         android:layout_marginRight="22dp"
         android:orientation="vertical">
+
         <TextView
             android:id="@+id/itemName"
             android:layout_width="match_parent"
@@ -28,19 +29,12 @@
             android:text="設置"
             android:textSize="35sp" />
 
-        <!--<ListView
-            android:id="@+id/listview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="#00000000"
-            android:dividerHeight="35dp"/>-->
-
-        <include layout="@layout/listitem_device"/>
-        <include layout="@layout/listitem_wifi"/>
-        <include layout="@layout/listitem_luminance"/>
-        <include layout="@layout/listitem_volume"/>
-        <include layout="@layout/listitem_sound_effect"/>
-        <include layout="@layout/listitem_openpwd"/>
-        <include layout="@layout/listitem_setpwd"/>
+        <include layout="@layout/setitem_device"/>
+        <include layout="@layout/setitem_wifi"/>
+        <include layout="@layout/setitem_luminance"/>
+        <include layout="@layout/setitem_volume"/>
+        <include layout="@layout/setitem_sound_effect"/>
+        <include layout="@layout/setitem_openpwd"/>
+        <include layout="@layout/setitem_setpwd"/>
     </LinearLayout>
 </LinearLayout>

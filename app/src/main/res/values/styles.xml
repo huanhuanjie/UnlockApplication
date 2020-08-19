@@ -6,10 +6,25 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textViewStyle">@style/MyTextViewStyle</item>
+        <item name="android:buttonStyle">@style/MyButtonStyle</item>
     </style>
 
     <style name="MyTextViewStyle" parent="android:Widget.TextView">
         <item name="android:textColor">#fff</item>
         <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="MyEditTextStyle" parent="Theme.AppCompat.Light">
+        <!-- AppCompatEditText默认状态下底线颜色 -->
+        <item name="colorControlNormal">#646464</item>
+        <!-- AppCompatEditText选择的底线颜色 -->
+        <item name="colorControlActivated">#fff</item>
+        <item name="android:textColor">#fff</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="MyButtonStyle" parent="android:Widget.Button">
+        <item name="android:textColor">#fff</item>
+        <item name="android:textSize">20sp</item>
     </style>
 </resources>
