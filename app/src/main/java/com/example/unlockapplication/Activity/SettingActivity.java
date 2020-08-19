@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
@@ -23,6 +24,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +49,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private WifiManager wifiManager;
     List<ScanResult> list;
     View wifiView;
+    AudioManager mAudioManager;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -65,12 +68,41 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         });
 
         RelativeLayout layout_device = findViewById(R.id.layout_device);
+        RelativeLayout layout_volume = findViewById(R.id.layout_volume);
         //Switch switch_wifi = findViewById(R.id.switch_wifi);
 
         deviceName = findViewById(R.id.deviceName);
 
         layout_device.setOnClickListener(this);
         //switch_wifi.setOnCheckedChangeListener(this);
+
+        SeekBar volume_seekbar = findViewById(R.id.volume_seekbar);
+        mAudioManager = (AudioManager)getSystemService(AUDIO_SERVICE);
+        int maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);//获取媒体声音最大值
+        volume_seekbar.setMax(maxVolume);
+        int currentVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        volume_seekbar.setProgress(currentVolume);//设置当前进度
+        volume_seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                if(b){
+                    //设置媒体音量
+                    mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, i, 0);
+                    int currentVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+                    seekBar.setProgress(currentVolume);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     /*@Override
@@ -121,6 +153,9 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 dialogBuilder.setView(wifiView);
                 alertDialog = dialogBuilder.create();
                 alertDialog.show();
+                break;
+            case R.id.layout_volume:
+
                 break;
         }
 
