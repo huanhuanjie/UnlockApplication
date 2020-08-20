@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.ContentObserver;
+import android.graphics.Color;
+import android.graphics.drawable.ClipDrawable;
 import android.media.AudioManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
@@ -13,32 +15,28 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.Toolbar;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.unlockapplication.R;
-import com.example.unlockapplication.Util.MyListAdapter;
+import com.example.unlockapplication.Util.MySoundListAdapter;
 import com.jaeger.library.StatusBarUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SettingActivity extends AppCompatActivity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
@@ -89,7 +87,8 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         this.registerReceiver(receiver, filter) ;
 
         RelativeLayout layout_device = findViewById(R.id.layout_device);
-        RelativeLayout layout_volume = findViewById(R.id.layout_volume);
+        RelativeLayout layout_sound_effect = findViewById(R.id.layout_sound_effect);
+
         //Switch switch_wifi = findViewById(R.id.switch_wifi);
 
         deviceName = findViewById(R.id.deviceName);
@@ -121,6 +120,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
         seekbar_volume.setOnSeekBarChangeListener(this);
         seekbar_luminance.setOnSeekBarChangeListener(this);
+        layout_sound_effect.setOnClickListener(this);
         /*volume_seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -228,7 +228,22 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 alertDialog = dialogBuilder.create();
                 alertDialog.show();
                 break;
-            case R.id.layout_volume:
+            case R.id.layout_sound_effect:
+                View soundEffectView = LayoutInflater.from(this).inflate(R.layout.dialog_sound_effect,null);
+
+                dialogBuilder.setView(soundEffectView);
+                alertDialog = dialogBuilder.create();
+                //alertDialog.getWindow().setBackgroundDrawableResource(R.drawable.alterdialog_shape);
+                alertDialog.show();
+
+                List<String> list = new ArrayList<>();
+                list.add("按鍵音");list.add("報警音");list.add("正常音");
+
+                ListView listview_sound_effect = soundEffectView.findViewById(R.id.listview_sound_effect);
+                MySoundListAdapter adapter = new MySoundListAdapter(this,list);
+
+                listview_sound_effect.setAdapter(adapter);
+                
 
                 break;
         }
@@ -273,16 +288,9 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             if(intent.getAction().equals("android.media.VOLUME_CHANGED_ACTION")){
                 int currentVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
                 seekbar_volume.setProgress(currentVolume);
-            }/*else if(intent.getAction().equals("est.android.setbrightness.action")){
-                System.out.println("亮度变化");
-                fBrightness = getSystemBrightness()/(float)Max_Brightness;
-                lp.screenBrightness = fBrightness;
-                getWindow().setAttributes(lp);
-            }*/
+            }
         }
     }
-
-
 
     @Override
     protected void onDestroy() {

@@ -11,6 +11,7 @@
 
     <style name="MyTextViewStyle" parent="android:Widget.TextView">
         <item name="android:textColor">#fff</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:includeFontPadding">false</item>
     </style>
 
