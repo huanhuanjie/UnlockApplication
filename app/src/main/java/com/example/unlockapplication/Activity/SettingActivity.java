@@ -106,11 +106,11 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
 
         //默认屏幕为当前亮度(0-1)
-        lp = getWindow().getAttributes();
+        /*lp = getWindow().getAttributes();
         fBrightness = (float) seekbar_luminance.getProgress() / (float)Max_Brightness;
         System.out.println("亮度"+seekbar_luminance.getProgress());
-        lp.screenBrightness =fBrightness;
-        getWindow().setAttributes(lp);
+        lp.screenBrightness =fBrightness;*/
+        //getWindow().setAttributes(lp);
         //lp.flags |= WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
 
         mAudioManager = (AudioManager)getSystemService(AUDIO_SERVICE);
@@ -157,13 +157,20 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     /**
      * 监听屏幕亮度变化
      */
-    /*private ContentObserver mBrightnessObserver = new ContentObserver(new Handler()) {
+    private ContentObserver mBrightnessObserver = new ContentObserver(new Handler()) {
         @Override
         public void onChange(boolean selfChange) {
-            seekbar_luminance.setProgress((int) (lp.screenBrightness*255));
+            seekbar_luminance.setProgress(getSystemBrightness());
         }
-    };*/
+    };
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getContentResolver().registerContentObserver(
+                Settings.System.getUriFor(Settings.System.SCREEN_BRIGHTNESS), true,
+                mBrightnessObserver);
+    }
 
     /**
      * 获得系统亮度
@@ -241,10 +248,11 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.seekbar_luminance:
                 if(i<1) i=1;//此处是为了避免screenbrightness=0，从而导致屏幕自动休眠锁屏
-                fBrightness = (float) i/ (float)Max_Brightness;
+                /*fBrightness = (float) i/ (float)Max_Brightness;
                 lp.screenBrightness =fBrightness;
-                getWindow().setAttributes(lp);
-                //Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, (int) fBrightness);
+                getWindow().setAttributes(lp);*/
+                Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS,
+                        seekbar_luminance.getProgress());
                 break;
         }
     }
@@ -272,6 +280,18 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 getWindow().setAttributes(lp);
             }*/
         }
+    }
+
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //注销广播
+        unregisterReceiver(receiver);
+        //注销亮度监听
+        getContentResolver().unregisterContentObserver(
+                mBrightnessObserver);
     }
 
     /*private void init() {
