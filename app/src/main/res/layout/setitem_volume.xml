@@ -27,7 +27,7 @@
             android:background="@drawable/volume_0"
             android:layout_gravity="center_vertical"/>
         <SeekBar
-            android:id="@+id/volume_seekbar"
+            android:id="@+id/seekbar_volume"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

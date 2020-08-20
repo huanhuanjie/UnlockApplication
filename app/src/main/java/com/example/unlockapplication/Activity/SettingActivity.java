@@ -1,27 +1,21 @@
 package com.example.unlockapplication.Activity;
 
-import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.AudioManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
-import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -45,7 +39,7 @@ import com.jaeger.library.StatusBarUtil;
 
 import java.util.List;
 
-public class SettingActivity extends AppCompatActivity implements View.OnClickListener {
+public class SettingActivity extends AppCompatActivity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
     Toolbar toolbar;
     TextView deviceName;
@@ -53,8 +47,12 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     List<ScanResult> list;
     View wifiView;
     AudioManager mAudioManager;
-    SeekBar volume_seekbar;
+    SeekBar seekbar_volume,seekbar_luminance;
     BroadcastReceiver receiver;
+
+    private WindowManager.LayoutParams lp = null;//窗口处理器的参数类
+    int Max_Brightness = 255;   //进度条最大值
+    float fBrightness = 0.0f;//亮度值
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -72,9 +70,10 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
-        receiver = new VolumeReceiver();
+        receiver = new BeekBarReceiver();
         IntentFilter filter = new IntentFilter() ;
         filter.addAction("android.media.VOLUME_CHANGED_ACTION") ;
+        filter.addAction("");
         this.registerReceiver(receiver, filter) ;
 
         RelativeLayout layout_device = findViewById(R.id.layout_device);
@@ -86,13 +85,29 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         layout_device.setOnClickListener(this);
         //switch_wifi.setOnCheckedChangeListener(this);
 
-        volume_seekbar = findViewById(R.id.volume_seekbar);
+        seekbar_volume = findViewById(R.id.seekbar_volume);
+        seekbar_luminance = findViewById(R.id.seekbar_luminance);
+
+        seekbar_luminance.setMax(Max_Brightness);
+        seekbar_luminance.setProgress(getSystemBrightness());  //默认进度值为当前系统亮度
+        System.out.println("系统亮度"+getSystemBrightness());
+        //默认屏幕为当前亮度(0-1)
+        lp = getWindow().getAttributes();
+        fBrightness = (float) seekbar_luminance.getProgress() / (float)Max_Brightness;
+        System.out.println("亮度"+seekbar_luminance.getProgress());
+        lp.screenBrightness =fBrightness;
+        getWindow().setAttributes(lp);
+        //lp.flags |= WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+
         mAudioManager = (AudioManager)getSystemService(AUDIO_SERVICE);
         int maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);//获取媒体声音最大值
-        volume_seekbar.setMax(maxVolume);
+        seekbar_volume.setMax(maxVolume);
         int currentVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        volume_seekbar.setProgress(currentVolume);//设置当前进度
-        volume_seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        seekbar_volume.setProgress(currentVolume);//设置当前进度
+
+        seekbar_volume.setOnSeekBarChangeListener(this);
+        seekbar_luminance.setOnSeekBarChangeListener(this);
+        /*volume_seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 if(b){
@@ -112,7 +127,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             public void onStopTrackingTouch(SeekBar seekBar) {
 
             }
-        });
+        });*/
     }
 
     /*@Override
@@ -124,6 +139,21 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         final AlertDialog alertDialog = dialogBuilder.create();
         alertDialog.show();
     }*/
+
+    /**
+     * 获得系统亮度
+     *
+     * @return
+     */
+    private int getSystemBrightness() {
+        int systemBrightness = 0;
+        try {
+            systemBrightness = Settings.System.getInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS);
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+        }
+        return systemBrightness;
+    }
 
     @Override
     public void onClick(View view) {
@@ -171,12 +201,47 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
-    private class VolumeReceiver extends BroadcastReceiver {
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+        switch (seekBar.getId()){
+            case R.id.seekbar_volume:
+                if(b){
+                    //设置媒体音量
+                    mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, i, 0);
+                    int currentVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+                    seekBar.setProgress(currentVolume);
+                }
+                break;
+            case R.id.seekbar_luminance:
+                if(i<1) i=1;//此处是为了避免screenbrightness=0，从而导致屏幕自动休眠锁屏
+                fBrightness = (float) i/ (float)Max_Brightness;
+                lp.screenBrightness =fBrightness;
+                getWindow().setAttributes(lp);
+                break;
+        }
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    private class BeekBarReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             if(intent.getAction().equals("android.media.VOLUME_CHANGED_ACTION")){
                 int currentVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-                volume_seekbar.setProgress(currentVolume);
+                seekbar_volume.setProgress(currentVolume);
+            }else if(intent.getAction().equals("est.android.setbrightness.action")){
+                System.out.println("亮度变化");
+                fBrightness = getSystemBrightness()/(float)Max_Brightness;
+                lp.screenBrightness = fBrightness;
+                getWindow().setAttributes(lp);
             }
         }
     }
