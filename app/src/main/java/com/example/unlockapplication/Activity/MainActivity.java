@@ -8,8 +8,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -32,6 +34,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     ArrayList<GridViewItem> datas = new ArrayList<>();
     ArrayList<ImageView> imageViews = new ArrayList();
     int[] images;String pwd = "";
+    int SCREEN_BRIGHTNESS_MODE_MANUAL = 0;
+    int REQUEST_CODE_WRITE_SETTINGS = 2;
 
     GridView gridView;LinearLayout linlayout_circle;
     ImageView circle_1,circle_2,circle_3,circle_4,circle_5,circle_6;
@@ -44,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        changeBrightnessMode();
         //设置状态栏为全透明
         StatusBarUtil.setTransparent(this);
 
@@ -141,6 +146,50 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             for (int i = 0; i < 6; i++)
                 imageViews.get(i).setImageResource(R.drawable.circle_0);
         }
+        if (requestCode == REQUEST_CODE_WRITE_SETTINGS)
+        {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            {
+                //Settings.System.canWrite方法检测授权结果
+                if (!Settings.System.canWrite(getApplicationContext()))
+                {
+                    Toast.makeText(this, "您拒绝了权限", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
 
+    /**
+     * Settings.System.getInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS);
+     * 该获取系统亮度值接口实际上都是指“手动亮度”模式下的亮度值。
+     * Android中并未提供处于“自动亮度”模式下的亮度值接口。
+     * 要想亮度值获取准确，需把系统亮度设置为“手动亮度”模式
+     *
+     * 修改系统亮度为“手动调节”模式
+     */
+
+    private void changeBrightnessMode(){
+        requestWriteSettings();
+        Settings.System.putInt(getContentResolver(),
+                Settings.System.SCREEN_BRIGHTNESS_MODE, SCREEN_BRIGHTNESS_MODE_MANUAL);
+    }
+
+    /**
+     * 申请权限
+     */
+    private void requestWriteSettings()
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            //大于等于23 请求权限
+            if ( !Settings.System.canWrite(getApplicationContext()))
+            {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+                intent.setData(Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent, REQUEST_CODE_WRITE_SETTINGS );
+            }
+        }else{
+            //小于23直接设置
+        }
     }
 }

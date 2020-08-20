@@ -5,11 +5,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.ContentObserver;
 import android.media.AudioManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -60,6 +62,16 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.setting_layout);
 
+        System.out.println("123");
+
+        try {
+            int abc = Settings.System.getInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE);
+            System.out.println("SCREEN_BRIGHTNESS_MODE"+abc);
+        } catch (Settings.SettingNotFoundException e) {
+            System.out.println("获取亮度模式失败");
+            e.printStackTrace();
+        }
+
         //设置状态栏为全透明
         StatusBarUtil.setTransparent(this);
         toolbar = findViewById(R.id.toolbar);
@@ -91,6 +103,8 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         seekbar_luminance.setMax(Max_Brightness);
         seekbar_luminance.setProgress(getSystemBrightness());  //默认进度值为当前系统亮度
         System.out.println("系统亮度"+getSystemBrightness());
+
+
         //默认屏幕为当前亮度(0-1)
         lp = getWindow().getAttributes();
         fBrightness = (float) seekbar_luminance.getProgress() / (float)Max_Brightness;
@@ -141,6 +155,17 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     }*/
 
     /**
+     * 监听屏幕亮度变化
+     */
+    /*private ContentObserver mBrightnessObserver = new ContentObserver(new Handler()) {
+        @Override
+        public void onChange(boolean selfChange) {
+            seekbar_luminance.setProgress((int) (lp.screenBrightness*255));
+        }
+    };*/
+
+
+    /**
      * 获得系统亮度
      *
      * @return
@@ -172,6 +197,8 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 dialogBuilder.setCancelable(false);
                 alertDialog = dialogBuilder.create();
                 alertDialog.show();
+
+
 
                 surebtn_device.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -217,6 +244,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 fBrightness = (float) i/ (float)Max_Brightness;
                 lp.screenBrightness =fBrightness;
                 getWindow().setAttributes(lp);
+                //Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, (int) fBrightness);
                 break;
         }
     }
@@ -237,12 +265,12 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             if(intent.getAction().equals("android.media.VOLUME_CHANGED_ACTION")){
                 int currentVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
                 seekbar_volume.setProgress(currentVolume);
-            }else if(intent.getAction().equals("est.android.setbrightness.action")){
+            }/*else if(intent.getAction().equals("est.android.setbrightness.action")){
                 System.out.println("亮度变化");
                 fBrightness = getSystemBrightness()/(float)Max_Brightness;
                 lp.screenBrightness = fBrightness;
                 getWindow().setAttributes(lp);
-            }
+            }*/
         }
     }
 
