@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 import com.example.unlockapplication.R;
 import com.example.unlockapplication.Util.MyGridViewAdapter;
-import com.example.unlockapplication.Util.ObtainTime;
+import com.example.unlockapplication.Util.TimeUtil;
 import com.example.unlockapplication.entity.GridViewItem;
 import com.jaeger.library.StatusBarUtil;
 
@@ -30,7 +30,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
-    ObtainTime obtainTime;
+    TimeUtil obtainTime;
     ArrayList<GridViewItem> datas = new ArrayList<>();
     ArrayList<ImageView> imageViews = new ArrayList();
     int[] images;String pwd = "";
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         imageViews.add(circle_1);imageViews.add(circle_2);imageViews.add(circle_3);
         imageViews.add(circle_4);imageViews.add(circle_5);imageViews.add(circle_6);
 
-        obtainTime = new ObtainTime();
+        obtainTime = new TimeUtil();
         time.setText(obtainTime.getTime());
         date.setText(obtainTime.getDate());
         week.setText(obtainTime.getWeek());

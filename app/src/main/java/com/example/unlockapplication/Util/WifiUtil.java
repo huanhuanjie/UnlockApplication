@@ -21,7 +21,7 @@ import java.util.List;
  * @Date 2020/8/19
  * @Description  获取wifi信息
  */
-public class ObtainWifi extends AppCompatActivity {
+public class WifiUtil extends AppCompatActivity {
 
 
 

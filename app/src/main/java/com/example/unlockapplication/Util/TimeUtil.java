@@ -7,7 +7,7 @@ import androidx.annotation.RequiresApi;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class ObtainTime {
+public class TimeUtil {
 
     SimpleDateFormat simpleDateFormat;
 
