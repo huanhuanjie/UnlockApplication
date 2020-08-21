@@ -52,6 +52,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
     int Max_Brightness = 255;   //亮度进度条最大值
     int maxVolume,currentVolume;
+    String openPwd = "111111",setPwd = "111111";
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -154,7 +155,6 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
                 device_editText.setText(deviceName.getText());
                 dialogBuilder.setView(deviceView);
-                dialogBuilder.setCancelable(false);
                 alertDialog = dialogBuilder.create();
                 alertDialog.show();
 
@@ -195,15 +195,78 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.layout_openpwd:
                 View openPwdView = LayoutInflater.from(this).inflate(R.layout.dialog_openpwd,null);
+
+                Button surebtn_openpwd = openPwdView.findViewById(R.id.surebtn_openpwd);
+                Button canclebtn_openpwd = openPwdView.findViewById(R.id.canclebtn_openpwd);
+                final EditText open_pwd = openPwdView.findViewById(R.id.open_pwd);
+                final EditText open_newpwd = openPwdView.findViewById(R.id.open_newpwd);
+                final EditText open_surepwd = openPwdView.findViewById(R.id.open_surepwd);
+                final TextView open_tip = openPwdView.findViewById(R.id.open_tip);
+
                 dialogBuilder.setView(openPwdView);
                 alertDialog = dialogBuilder.create();
                 alertDialog.show();
+
+                surebtn_openpwd.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (!open_pwd.getText().toString().equals(openPwd)){
+                            open_tip.setText("原密码错误!");
+                            System.out.println("原密码错误!");
+                        }else if (!open_newpwd.getText().toString().equals(open_surepwd.getText().toString())){
+                            open_tip.setText("新密码与确认密码不一致！");
+                            System.out.println("新密码与确认密码不一致！");
+                        }else {
+                            openPwd = open_newpwd.getText().toString();
+                            alertDialog.dismiss();
+                        }
+                    }
+                });
+
+                canclebtn_openpwd.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        alertDialog.dismiss();
+                    }
+                });
+
                 break;
             case R.id.layout_setpwd:
-                View setPwdView = LayoutInflater.from(this).inflate(R.layout.dialog_setpwd,null);
+                final View setPwdView = LayoutInflater.from(this).inflate(R.layout.dialog_setpwd,null);
+
+                Button surebtn_setpwd = setPwdView.findViewById(R.id.surebtn_setpwd);
+                Button canclebtn_setpwd = setPwdView.findViewById(R.id.canclebtn_setpwd);
+                final EditText set_pwd = setPwdView.findViewById(R.id.set_pwd);
+                final EditText set_newpwd = setPwdView.findViewById(R.id.set_newpwd);
+                final EditText set_surepwd = setPwdView.findViewById(R.id.set_surepwd);
+                final TextView set_tip = setPwdView.findViewById(R.id.set_tip);
+
                 dialogBuilder.setView(setPwdView);
                 alertDialog = dialogBuilder.create();
                 alertDialog.show();
+
+                surebtn_setpwd.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (!set_pwd.getText().toString().equals(setPwd)){
+                            set_tip.setText("原密码错误!");
+                            System.out.println("原密码错误!");
+                        }else if (!set_newpwd.getText().toString().equals(set_surepwd.getText().toString())){
+                            set_tip.setText("新密码与确认密码不一致！");
+                            System.out.println("新密码与确认密码不一致！");
+                        }else {
+                            setPwd = set_newpwd.getText().toString();
+                            alertDialog.dismiss();
+                        }
+                    }
+                });
+
+                canclebtn_setpwd.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        alertDialog.dismiss();
+                    }
+                });
                 break;
         }
     }
