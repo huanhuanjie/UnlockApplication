@@ -34,7 +34,7 @@ public class MyGridViewAdapter extends BaseAdapter {
 
         if (convertView == null){
             if (i!=9){
-                view = LayoutInflater.from(context).inflate(R.layout.item_layout,null);
+                view = LayoutInflater.from(context).inflate(R.layout.item_layout_num,null);
                 viewHolder = new ViewHolder();
                 viewHolder.itemImage = view.findViewById(R.id.image);
                 viewHolder.itemName = view.findViewById(R.id.tv);

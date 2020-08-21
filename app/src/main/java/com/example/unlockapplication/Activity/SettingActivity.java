@@ -3,46 +3,40 @@ package com.example.unlockapplication.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.ContentObserver;
-import android.graphics.Color;
-import android.graphics.drawable.ClipDrawable;
 import android.media.AudioManager;
-import android.net.wifi.ScanResult;
-import android.net.wifi.WifiManager;
+import android.media.SoundPool;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.unlockapplication.R;
-import com.example.unlockapplication.Util.MySoundListAdapter;
 import com.jaeger.library.StatusBarUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class SettingActivity extends AppCompatActivity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+public class SettingActivity extends AppCompatActivity implements View.OnClickListener,
+        SeekBar.OnSeekBarChangeListener,
+        CompoundButton.OnCheckedChangeListener {
 
     RelativeLayout layout_device,layout_sound_effect,layout_openpwd,layout_setpwd;
+    Switch switch_sound_effect1,switch_sound_effect2,switch_sound_effect3;
     SeekBar seekbar_volume,seekbar_luminance;
     Toolbar toolbar;
     TextView deviceName;
@@ -53,6 +47,10 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     int Max_Brightness = 255;   //亮度进度条最大值
     int maxVolume,currentVolume;
     String openPwd = "111111",setPwd = "111111";
+
+    SoundPool mSoundPool;
+    int streamID1,streamID2,streamID3;
+    int soundid1,soundid2,soundid3;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -182,16 +180,37 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.layout_sound_effect:
                 View soundEffectView = LayoutInflater.from(this).inflate(R.layout.dialog_sound_effect,null);
 
-                dialogBuilder.setView(soundEffectView);
-                alertDialog = dialogBuilder.create();
-                alertDialog.show();
+                switch_sound_effect1 = soundEffectView.findViewById(R.id.switch_sound_effect1);
+                switch_sound_effect2 = soundEffectView.findViewById(R.id.switch_sound_effect2);
+                switch_sound_effect3 = soundEffectView.findViewById(R.id.switch_sound_effect3);
 
-                List<String> list = new ArrayList<>();
+                dialogBuilder.setView(soundEffectView);
+                AlertDialog alertDialog1 = dialogBuilder.create();
+                alertDialog1.show();
+
+                //音效预加载
+                mSoundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
+                streamID1 = mSoundPool.load(this,R.raw.type_sound, 1);
+                streamID2 = mSoundPool.load(this,R.raw.warn_sound, 1);
+                streamID3 = mSoundPool.load(this,R.raw.normal_sound, 1);
+
+                alertDialog1.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface) {
+                        mSoundPool.release();
+                    }
+                });
+
+                switch_sound_effect1.setOnCheckedChangeListener(this);
+                switch_sound_effect2.setOnCheckedChangeListener(this);
+                switch_sound_effect3.setOnCheckedChangeListener(this);
+
+                /*List<String> list = new ArrayList<>();
                 list.add("按鍵音");list.add("報警音");list.add("正常音");
 
                 ListView listview_sound_effect = soundEffectView.findViewById(R.id.listview_sound_effect);
                 MySoundListAdapter adapter = new MySoundListAdapter(this,list);
-                listview_sound_effect.setAdapter(adapter);
+                listview_sound_effect.setAdapter(adapter);*/
                 break;
             case R.id.layout_openpwd:
                 View openPwdView = LayoutInflater.from(this).inflate(R.layout.dialog_openpwd,null);
@@ -271,6 +290,46 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    /**
+     * 开关按钮监听事件
+     */
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        switch (compoundButton.getId()){
+            case R.id.switch_sound_effect1:
+                if (b){
+                    soundid1 = mSoundPool.play(streamID1, 1, 1, 1, -1, 1.0f);
+                    switch_sound_effect2.setChecked(false);
+                    switch_sound_effect3.setChecked(false);
+                }else {
+                    mSoundPool.stop(soundid1);
+                }
+                break;
+            case R.id.switch_sound_effect2:
+                if (b){
+                    soundid2 = mSoundPool.play(streamID2, 1, 1, 1, -1, 1.0f);
+                    switch_sound_effect1.setChecked(false);
+                    switch_sound_effect3.setChecked(false);
+                }else {
+                    mSoundPool.stop(soundid2);
+                }
+                break;
+            case R.id.switch_sound_effect3:
+                if (b){
+                    soundid3 = mSoundPool.play(streamID3, 1, 1, 1, -1, 1.0f);
+                    switch_sound_effect1.setChecked(false);
+                    switch_sound_effect2.setChecked(false);
+                }else {
+                    mSoundPool.stop(soundid3);
+                }
+                break;
+        }
+    }
+
+
+    /**
+     * 进度条滑动监听事件
+     */
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
         switch (seekBar.getId()){
