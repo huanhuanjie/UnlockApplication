@@ -1,14 +1,17 @@
-package com.example.unlockapplication.Activity;
+package com.example.unlockapplication.activity;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.net.wifi.ScanResult;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,35 +25,59 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.unlockapplication.R;
+import com.example.unlockapplication.util.AppContants;
+import com.example.unlockapplication.util.CollectionUtils;
+import com.example.unlockapplication.util.WifiListAdapter;
+import com.example.unlockapplication.util.WifiSupport;
+import com.example.unlockapplication.entity.WifiBean;
 import com.jaeger.library.StatusBarUtil;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class SettingActivity extends AppCompatActivity implements View.OnClickListener,
         SeekBar.OnSeekBarChangeListener,
         CompoundButton.OnCheckedChangeListener {
 
     RelativeLayout layout_device,layout_sound_effect,layout_openpwd,layout_setpwd;
-    Switch switch_sound_effect1,switch_sound_effect2,switch_sound_effect3;
+    Switch switch_wifi,switch_sound_effect1,switch_sound_effect2,switch_sound_effect3;
     SeekBar seekbar_volume,seekbar_luminance;
     Toolbar toolbar;
     TextView deviceName;
 
     AudioManager mAudioManager;
     BroadcastReceiver receiver;
+    SoundPool mSoundPool;
+    AlertDialog wifiAlertDialog = null;
 
     int Max_Brightness = 255;   //亮度进度条最大值
     int maxVolume,currentVolume;
     String openPwd = "111111",setPwd = "111111";
-
-    SoundPool mSoundPool;
     int streamID1,streamID2,streamID3;
     int soundid1,soundid2,soundid3;
+    List<WifiBean> realWifiList = new ArrayList<>();
+    private boolean mHasPermission;
+    WifiListAdapter adapter;
+
+    //权限请求码
+    private static final int PERMISSION_REQUEST_CODE = 0;
+    //两个危险权限需要动态申请
+    private static final String[] NEEDED_PERMISSIONS = new String[]{
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION
+    };
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -77,6 +104,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
         //各设置项
         layout_device = findViewById(R.id.layout_device);
+        switch_wifi = findViewById(R.id.switch_wifi);
         seekbar_luminance = findViewById(R.id.seekbar_luminance);
         seekbar_volume = findViewById(R.id.seekbar_volume);
         layout_sound_effect = findViewById(R.id.layout_sound_effect);
@@ -96,6 +124,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         seekbar_volume.setProgress(currentVolume);//设置当前进度
 
         layout_device.setOnClickListener(this);
+        switch_wifi.setOnCheckedChangeListener(this);
         seekbar_volume.setOnSeekBarChangeListener(this);
         seekbar_luminance.setOnSeekBarChangeListener(this);
         layout_sound_effect.setOnClickListener(this);
@@ -204,13 +233,6 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 switch_sound_effect1.setOnCheckedChangeListener(this);
                 switch_sound_effect2.setOnCheckedChangeListener(this);
                 switch_sound_effect3.setOnCheckedChangeListener(this);
-
-                /*List<String> list = new ArrayList<>();
-                list.add("按鍵音");list.add("報警音");list.add("正常音");
-
-                ListView listview_sound_effect = soundEffectView.findViewById(R.id.listview_sound_effect);
-                MySoundListAdapter adapter = new MySoundListAdapter(this,list);
-                listview_sound_effect.setAdapter(adapter);*/
                 break;
             case R.id.layout_openpwd:
                 View openPwdView = LayoutInflater.from(this).inflate(R.layout.dialog_openpwd,null);
@@ -296,6 +318,37 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         switch (compoundButton.getId()){
+            case R.id.switch_wifi:
+                AlertDialog.Builder wifiDialogBuilder = new AlertDialog.Builder(this);
+                if (b){
+                    View wifiView = LayoutInflater.from(this).inflate(R.layout.dialog_wifi_list,null);
+                    RecyclerView recyclerWifiList = wifiView.findViewById(R.id.recy_list_wifi);
+
+                    wifiDialogBuilder.setView(wifiView);
+                    wifiAlertDialog = wifiDialogBuilder.create();
+                    wifiAlertDialog.show();
+
+                    mHasPermission = checkPermission();
+                    if (!mHasPermission && WifiSupport.isOpenWifi(this)) {  //未获取权限，申请权限
+                        requestPermission();
+                    }else if(mHasPermission && WifiSupport.isOpenWifi(this)){  //已经获取权限
+                        adapter = new WifiListAdapter(this,realWifiList);
+                        recyclerWifiList.setLayoutManager(new LinearLayoutManager(this));
+                        recyclerWifiList.setAdapter(adapter);
+                    }else{
+                        Toast.makeText(this,"WIFI处于关闭状态",Toast.LENGTH_SHORT).show();
+                    }
+                    sortScaResult();
+                }
+                switch_wifi.setChecked(false);
+                /*wifiAlertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface) {
+                        switch_wifi.setChecked(false);
+                        //System.out.println("wifi列表消失");
+                    }
+                });*/
+                break;
             case R.id.switch_sound_effect1:
                 if (b){
                     soundid1 = mSoundPool.play(streamID1, 1, 1, 1, -1, 1.0f);
@@ -373,5 +426,49 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         //注销亮度监听
         getContentResolver().unregisterContentObserver(
                 mBrightnessObserver);
+    }
+
+    /**
+     * 检查是否已经授予权限
+     * @return
+     */
+    private boolean checkPermission() {
+        for (String permission : NEEDED_PERMISSIONS) {
+            if (ActivityCompat.checkSelfPermission(this, permission)
+                    != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 申请权限
+     */
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(this,
+                NEEDED_PERMISSIONS, PERMISSION_REQUEST_CODE);
+    }
+
+    /**
+     * 获取wifi列表然后将bean转成自己定义的WifiBean
+     */
+    public void sortScaResult(){
+        List<ScanResult> scanResults = WifiSupport.noSameName(WifiSupport.getWifiScanResult(this));
+        realWifiList.clear();
+        if(!CollectionUtils.isNullOrEmpty(scanResults)){
+            for(int i = 0;i < scanResults.size();i++){
+                WifiBean wifiBean = new WifiBean();
+                wifiBean.setWifiName(scanResults.get(i).SSID);
+                wifiBean.setState(AppContants.WIFI_STATE_UNCONNECT);   //只要获取都假设设置成未连接，真正的状态都通过广播来确定
+                wifiBean.setCapabilities(scanResults.get(i).capabilities);
+                wifiBean.setLevel(WifiSupport.getLevel(scanResults.get(i).level)+"");
+                realWifiList.add(wifiBean);
+
+                //排序
+                Collections.sort(realWifiList);
+                adapter.notifyDataSetChanged();
+            }
+        }
     }
 }

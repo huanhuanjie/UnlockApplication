@@ -1,4 +1,4 @@
-package com.example.unlockapplication.Util;
+package com.example.unlockapplication.util;
 
 import android.icu.text.SimpleDateFormat;
 import android.os.Build;

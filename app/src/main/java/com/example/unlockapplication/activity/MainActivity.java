@@ -1,4 +1,4 @@
-package com.example.unlockapplication.Activity;
+package com.example.unlockapplication.activity;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -21,8 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.unlockapplication.R;
-import com.example.unlockapplication.Util.MyGridViewAdapter;
-import com.example.unlockapplication.Util.TimeUtil;
+import com.example.unlockapplication.util.MyGridViewAdapter;
+import com.example.unlockapplication.util.TimeUtil;
 import com.example.unlockapplication.entity.GridViewItem;
 import com.jaeger.library.StatusBarUtil;
 

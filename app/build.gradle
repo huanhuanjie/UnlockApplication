@@ -32,5 +32,7 @@ dependencies {
 
     compile 'com.jaeger.statusbarutil:library:1.5.1'
     implementation 'ru.alexbykov:nopermission:1.1.2'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+
 
 }

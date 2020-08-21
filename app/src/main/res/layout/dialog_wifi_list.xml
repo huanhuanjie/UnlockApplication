@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.SettingActivity"
+    tools:context=".activity.SettingActivity"
     android:orientation="vertical">
     
     <LinearLayout
@@ -19,11 +19,24 @@
             android:gravity="center_vertical"/>
     </LinearLayout>
 
-    <ListView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#202020">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recy_list_wifi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+        </androidx.recyclerview.widget.RecyclerView>
+    </LinearLayout>
+
+    <!--<ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:background="#202020">
-    </ListView>
+    </ListView>-->
 
 </LinearLayout>
