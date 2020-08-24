@@ -21,7 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.unlockapplication.R;
-import com.example.unlockapplication.util.MyGridViewAdapter;
+import com.example.unlockapplication.adapter.MyGridViewAdapter;
 import com.example.unlockapplication.util.TimeUtil;
 import com.example.unlockapplication.entity.GridViewItem;
 import com.jaeger.library.StatusBarUtil;
@@ -30,12 +30,13 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
+    public static final int SCREEN_BRIGHTNESS_MODE_MANUAL = 0;  //手动调节模式
+    public static final int REQUEST_CODE_WRITE_SETTINGS = 2;  //修改手机设置请求码
+
     TimeUtil obtainTime;
     ArrayList<GridViewItem> datas = new ArrayList<>();
     ArrayList<ImageView> imageViews = new ArrayList();
     int[] images;String pwd = "";
-    int SCREEN_BRIGHTNESS_MODE_MANUAL = 0;
-    int REQUEST_CODE_WRITE_SETTINGS = 2;
 
     GridView gridView;LinearLayout linlayout_circle;
     ImageView circle_1,circle_2,circle_3,circle_4,circle_5,circle_6;
@@ -186,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
                 intent.setData(Uri.parse("package:" + getPackageName()));
-                startActivityForResult(intent, REQUEST_CODE_WRITE_SETTINGS );
+                startActivityForResult(intent, REQUEST_CODE_WRITE_SETTINGS);
             }
         }else{
             //小于23直接设置
