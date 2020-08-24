@@ -21,14 +21,15 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="270dp"
         android:background="#202020">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recy_list_wifi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"/>
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"/>
     </LinearLayout>
 
 </LinearLayout>

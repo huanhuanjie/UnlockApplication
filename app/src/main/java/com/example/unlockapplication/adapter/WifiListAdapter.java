@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,7 +42,10 @@ public class WifiListAdapter extends RecyclerView.Adapter<WifiListAdapter.MyView
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         holder.tv_name.setText(wifiListBeanList.get(position).getName());
-        holder.tv_encrypt.setText("加密方式：" + wifiListBeanList.get(position).getEncrypt());
+        if (wifiListBeanList.get(position).getEncrypt().equals("WPA")
+                ||wifiListBeanList.get(position).getEncrypt().equals("WEP")){
+            holder.tv_encrypt.setImageResource(R.drawable.encryption);
+        }
         /*holder.btn_link.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,13 +61,14 @@ public class WifiListAdapter extends RecyclerView.Adapter<WifiListAdapter.MyView
 
     class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tv_name, tv_encrypt;
+        TextView tv_name;
+        ImageView tv_encrypt;
         Button btn_link;
 
         public MyViewHolder(View view) {
             super(view);
             tv_name = view.findViewById(R.id.wifi_name);
-            tv_encrypt = view.findViewById(R.id.wifi_encrypt);
+            tv_encrypt = view.findViewById(R.id.wifi_encrypt_image);
         }
     }
 }
